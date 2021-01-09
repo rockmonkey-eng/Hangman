@@ -1,0 +1,172 @@
+using System;
+using System.Collections.Generic;
+
+namespace Hangman
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //setup
+            Console.WriteLine("Type a word for player 2 to guess!");
+            string word = (Console.ReadLine().ToUpper());
+            bool[] bWord = new bool[word.Length];
+            int tries = 6;
+            char guess = ' ';
+            string guesses = "";
+            Console.Clear();
+            ClearSpaces(word, bWord, guess);
+
+            Console.WriteLine($"The word is {word.Length} letters long!");
+            Console.WriteLine("Guess the word one letter at a time!");
+            PrintMan(tries);
+            PrintWord(word,bWord);
+
+            //initial start
+                guess = GetInput();
+                Console.Clear();
+                PrintAllGuesses(ref guesses, guess);
+                if (ValidateInput(word, bWord, guess) == false)
+                {
+                    Console.WriteLine("incorrect");
+                tries--;
+                }
+                else Console.WriteLine("correct");
+                PrintMan(tries);
+                PrintWord(word, bWord);
+                Console.WriteLine();
+                Console.WriteLine(tries + " tries left");
+            //looping
+            while ((GameOverCheck(word, bWord) == false) && tries > 0)
+            {
+                guess = GetInput();
+                Console.Clear();
+                PrintAllGuesses(ref guesses, guess);
+                if (ValidateInput(word, bWord, guess) == false)
+                {
+                    Console.WriteLine("incorrect");
+                    tries--;
+                }
+                else Console.WriteLine("correct");
+                PrintMan(tries);
+                PrintWord(word, bWord);
+                Console.WriteLine();
+                Console.WriteLine(tries + " tries left");
+            }
+        }
+            //getinput
+            static char GetInput()
+            {
+                Console.WriteLine("  ");
+                Console.WriteLine("Input a letter");
+                var guess = (Console.ReadLine().ToUpper());
+                if (string.IsNullOrEmpty(guess))
+                {
+                    return '\0';
+                }
+                else return guess[0];
+            }
+            //validate input
+            static bool ValidateInput(string word, bool[] bWord, char guess)
+            {
+            bool wastrue = false;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    if (guess == word[i])
+                    {
+                        bWord[i] = true;
+                    wastrue = true;
+                    }
+                }
+                if (wastrue == true)
+            {
+                return true;
+            }
+            return false;
+            }
+
+        //print the known and unknown 
+        static void PrintWord(string word, bool[] bWord)
+        {
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (bWord[i] == true)
+                {                  
+                    Console.Write(word[i] + " ");
+                }
+                else Console.Write("_ ");
+            }
+            Console.WriteLine();
+        }
+
+        //loop conditional
+        static bool GameOverCheck(string word, bool[] bWord)
+        {
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (bWord[i] == false)
+                {
+                    return false;
+                }               
+            }
+            Console.WriteLine(" ");
+            Console.WriteLine("Player 2 Wins!");
+            return true;
+        }
+        static void PrintMan(int tries)
+        {
+            switch (tries)
+            {
+                case 0:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@"/|\");
+                    Console.WriteLine(@"/\"); Console.WriteLine();
+                    break;
+                case 1:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@"/|\");
+                    Console.WriteLine(@"/"); Console.WriteLine();
+                    break;
+                case 2:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@"/|\");
+                    Console.WriteLine(@""); Console.WriteLine();
+                    break;
+                case 3:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@"/|");
+                    Console.WriteLine(@""); Console.WriteLine();
+                    break;
+                case 4:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@" |");
+                    Console.WriteLine(@""); Console.WriteLine();
+                    break;
+                case 5:
+                    Console.WriteLine(" O");
+                    Console.WriteLine(@"");
+                    Console.WriteLine(@""); Console.WriteLine();
+                    break;
+                case 6:
+                    Console.WriteLine(" ");
+                    Console.WriteLine("");
+                    Console.WriteLine(""); Console.WriteLine();
+                    break;
+            }
+        }
+        static void ClearSpaces(string word, bool[] bWord, char guess)
+        {
+            if (word.Contains(' '))
+                {
+                ValidateInput(word, bWord, guess);
+            }
+        }
+
+        static void PrintAllGuesses(ref string guesses, char guess)
+        {
+            guesses += guess;
+            Console.WriteLine($"Letters guessed: {guesses}");
+            
+        }
+    }
+}
